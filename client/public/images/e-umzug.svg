@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#6a1b9a"/>
+  <circle cx="620" cy="110" r="160" fill="#ffffff" fill-opacity="0.12"/>
+  <circle cx="140" cy="380" r="120" fill="#ffffff" fill-opacity="0.10"/>
+  <rect x="230" y="160" width="160" height="140" fill="#d7b98e"/><rect x="410" y="130" width="170" height="170" fill="#c9a66b"/><rect x="250" y="120" width="120" height="70" rx="6" fill="#263238"/><rect x="235" y="190" width="150" height="10" rx="4" fill="#455a64"/>
+  <text x="400" y="400" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="600" fill="#ffffff">E-Umzug</text>
+</svg>

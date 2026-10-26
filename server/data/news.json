@@ -1,0 +1,142 @@
+[
+  {
+    "id": 101,
+    "title": "Herbst-Fondue der Verwaltung am 11. November",
+    "content": "<p>Am <strong>Mittwoch, 11. November</strong>, laden wir alle Mitarbeitenden ab 18:30 Uhr zum Fondue im Werkhof ein.</p><p>Anmeldung bis 4. November über das <a href=\"https://intranet.musterwil.example/anmeldung\">Anmeldeformular</a>. Vegetarische und laktosefreie Varianten sind vorhanden.</p>",
+    "category": "Event",
+    "priority": "Normal",
+    "imageUrl": "/images/fondue.svg",
+    "imageAlt": "Caquelon mit Fondue auf einem Holztisch",
+    "createdAt": "2026-10-14T08:15:00Z"
+  },
+  {
+    "id": 102,
+    "title": "Neues Ticketsystem für IT-Anfragen ab 1. November",
+    "content": "<p>Ab dem 1. November erfassen alle Mitarbeitenden IT-Anfragen im neuen Ticketsystem. E-Mails an <em>informatik@musterwil.example</em> werden danach nicht mehr bearbeitet.</p><ul><li>Login mit dem bestehenden Verwaltungskonto</li><li>Dringende Fälle weiterhin telefonisch unter 044 000 00 00</li></ul>",
+    "category": "Projekt",
+    "priority": "Hoch",
+    "imageUrl": "/images/ticketsystem.svg",
+    "imageAlt": null,
+    "createdAt": "2026-10-12T13:40:00Z"
+  },
+  {
+    "id": 103,
+    "title": "Druckerregeln im Gemeindehaus angepasst",
+    "content": "<p class=\"MsoNormal\"><span style=\"font-family:'Calibri',sans-serif;mso-fareast-language:DE-CH\">Ab sofort druckt jedes Gerät standardmässig schwarz-weiss und doppelseitig.<o:p></o:p></span></p><p class=\"MsoNormal\"><span style=\"mso-bidi-font-weight:bold\">Farbdrucke bitte nur für Dokumente mit Aussenwirkung.</span></p><img src=\"x\" onerror=\"alert('Bild konnte nicht geladen werden')\"><script>alert('Hallo von der Kommunikation')</script>",
+    "category": "Info",
+    "priority": "Normal",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": "2026-10-09T07:05:00Z"
+  },
+  {
+    "id": 104,
+    "title": "Wir begrüssen drei neue Mitarbeitende im Steueramt",
+    "content": "<p>Seit dem 1. Oktober verstärken Lea Muster, Nico Beispiel und Sara Test das Team des Steueramts. Herzlich willkommen!</p>",
+    "category": "Personal",
+    "priority": "Normal",
+    "imageUrl": "/images/willkommen.svg",
+    "imageAlt": "Willkommensschild im Eingangsbereich",
+    "createdAt": "2026-10-08T10:00:00Z"
+  },
+  {
+    "id": 105,
+    "title": "Informationsveranstaltung zur Gesamtrevision der Gemeindeordnung und zur departementsübergreifenden Neuorganisation der Verwaltungsabläufe 2027",
+    "content": "<p>Der Gemeinderat informiert alle Mitarbeitenden über den Stand der Revision und die geplanten Änderungen in den Abläufen zwischen den Abteilungen. Die Veranstaltung findet im Saal des Gemeindehauses statt und wird aufgezeichnet.</p>",
+    "category": "Projekt",
+    "priority": "Normal",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": "2026-10-06T15:20:00Z"
+  },
+  {
+    "id": 106,
+    "title": "Pflichtschulung Informatiksicherheitssensibilisierungsweiterbildung",
+    "content": "<p>Alle Mitarbeitenden absolvieren bis Ende Jahr die Online-Schulung zur Informationssicherheit. Dauer: rund 45 Minuten.</p>",
+    "category": "Event",
+    "priority": "Hoch",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": "2026-10-05T06:45:00Z"
+  },
+  {
+    "id": 107,
+    "title": "Sommerfest 2026: Danke fürs Mitfeiern!",
+    "content": "<p>Über 80 Mitarbeitende waren dabei. Die Fotos findet ihr in der Bildergalerie.</p>",
+    "category": "Event",
+    "priority": "Normal",
+    "imageUrl": "/images/sommerfest-2026.jpg",
+    "imageAlt": "Gruppenfoto vom Sommerfest",
+    "createdAt": "2026-08-24T09:30:00Z"
+  },
+  {
+    "id": 108,
+    "title": "Neue Öffnungszeiten der Einwohnerdienste ab Oktober",
+    "content": "<p>Ab dem 1. Oktober sind die Einwohnerdienste neu am Donnerstag bis 18:30 Uhr geöffnet. Am Freitagnachmittag bleibt der Schalter dafür geschlossen.</p>",
+    "category": "Info",
+    "priority": "Normal",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": "2026-09-30T22:30:00Z"
+  },
+  {
+    "id": 109,
+    "title": "Winterdienst: Pikettplan ist online",
+    "content": "<p>Der Pikettplan für den Winterdienst 2026/27 ist im Teams-Kanal des Werkhofs abgelegt.</p>",
+    "category": "Info",
+    "priority": "Normal",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": ""
+  },
+  {
+    "id": 110,
+    "title": "Budget 2027 vom Gemeinderat verabschiedet",
+    "content": "<p>Der Gemeinderat hat das Budget 2027 zuhanden der Gemeindeversammlung verabschiedet. Die wichtigsten Kennzahlen findet ihr im Anhang der Medienmitteilung.</p>",
+    "category": "Info",
+    "priority": "Hoch",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": "2025-12-03T09:00:00Z"
+  },
+  {
+    "id": 111,
+    "title": "Velo-Challenge «bike to work»: Team Bauamt führt",
+    "content": "<p>Nach drei Wochen liegt das Team Bauamt mit 1'240 Kilometern vorne. Wer holt noch auf?</p>",
+    "category": "Event",
+    "priority": null,
+    "imageUrl": "/images/velo.svg",
+    "imageAlt": "Velo vor dem Gemeindehaus",
+    "createdAt": "2026-09-18T11:10:00Z"
+  },
+  {
+    "id": 112,
+    "title": "Projekt E-Umzug: Pilotphase abgeschlossen",
+    "content": "<p>Die Pilotphase der Einwohner- &amp; Fremdenkontrolle ist abgeschlossen. <span class=\"intranet-hinweis\">Der Rollout auf alle Schalter folgt im Januar.</span></p>",
+    "category": "Projekt",
+    "priority": "Normal",
+    "imageUrl": "/images/e-umzug.svg",
+    "imageAlt": "Umzugskartons mit Laptop",
+    "createdAt": "2026-09-11T14:00:00Z"
+  },
+  {
+    "id": 113,
+    "title": "Kurzinfo: Kantine bleibt am Freitag geschlossen",
+    "content": "",
+    "category": "info",
+    "priority": "Normal",
+    "imageUrl": null,
+    "imageAlt": null,
+    "createdAt": "2026-10-15T07:30:00Z"
+  },
+  {
+    "id": 102,
+    "title": "Neues Ticketsystem für IT-Anfragen ab 1. November",
+    "content": "<p>Ab dem 1. November erfassen alle Mitarbeitenden IT-Anfragen im neuen Ticketsystem. E-Mails an <em>informatik@musterwil.example</em> werden danach nicht mehr bearbeitet.</p><ul><li>Login mit dem bestehenden Verwaltungskonto</li><li>Dringende Fälle weiterhin telefonisch unter 044 000 00 00</li></ul>",
+    "category": "Projekt",
+    "priority": "Hoch",
+    "imageUrl": "/images/ticketsystem.svg",
+    "imageAlt": null,
+    "createdAt": "2026-10-12T13:40:00Z"
+  }
+]

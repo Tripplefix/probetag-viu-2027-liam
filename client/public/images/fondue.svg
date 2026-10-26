@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#8d5524"/>
+  <circle cx="620" cy="110" r="160" fill="#ffffff" fill-opacity="0.12"/>
+  <circle cx="140" cy="380" r="120" fill="#ffffff" fill-opacity="0.10"/>
+  <ellipse cx="400" cy="230" rx="150" ry="70" fill="#f4d58d"/><rect x="250" y="230" width="300" height="80" rx="30" fill="#c0392b"/><line x1="330" y1="120" x2="380" y2="215" stroke="#fff" stroke-width="8"/><line x1="470" y1="120" x2="420" y2="215" stroke="#fff" stroke-width="8"/>
+  <text x="400" y="400" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="600" fill="#ffffff">Herbst-Fondue</text>
+</svg>

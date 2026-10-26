@@ -1,0 +1,15 @@
+{
+  "name": "probetag-viu-2027-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@azure/msal-node": "^7.1.0",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0"
+  }
+}

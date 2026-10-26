@@ -1,0 +1,67 @@
+:root {
+  /* Farben Gemeinde Musterwil */
+  --color-primary: #0b4f6c;
+  --color-primary-contrast: #ffffff;
+  --color-text: #1d2733;
+  --color-text-muted: #5b6673;
+  --color-background: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-border: #d9dee4;
+
+  /* Kategorien */
+  --color-event: #c62828;
+  --color-projekt: #2e7d32;
+  --color-info: #1565c0;
+
+  /* Abstände und Formen */
+  --space-xs: 4px;
+  --space-s: 8px;
+  --space-m: 16px;
+  --space-l: 24px;
+  --space-xl: 40px;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
+
+  --font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-background);
+  line-height: 1.5;
+}
+
+.app-header {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  padding: var(--space-l) var(--space-xl);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.app-header__eyebrow {
+  margin: 0 0 var(--space-xs);
+  font-size: 0.875rem;
+  opacity: 0.85;
+}
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-l);
+}
+
+.app-debug {
+  color: var(--color-text-muted);
+}
