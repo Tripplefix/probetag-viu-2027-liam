@@ -4,6 +4,7 @@ import NewsCard from './components/NewsCard';
 import NewsDialog from './components/NewsDialog';
 import type { NewsItem } from './types/news';
 import { sortNewestFirst } from './utils/format';
+import { normalizeNews } from './utils/news';
 
 export default function App() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -13,7 +14,7 @@ export default function App() {
 
   useEffect(() => {
     fetchNews()
-      .then((items) => setNews(sortNewestFirst(items)))
+      .then((items) => setNews(sortNewestFirst(normalizeNews(items))))
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -38,9 +39,8 @@ export default function App() {
         {!loading && !error && news.length === 0 && <p className="app-status">Zurzeit gibt es keine News.</p>}
         {!loading && !error && news.length > 0 && (
           <ul className="news-grid">
-            {news.map((item, index) => (
-              // Index im Key, weil der Export doppelte IDs enthält (Bereinigung folgt).
-              <li key={`${item.id}-${index}`}>
+            {news.map((item) => (
+              <li key={item.id}>
                 <NewsCard news={item} onOpen={setSelected} />
               </li>
             ))}
