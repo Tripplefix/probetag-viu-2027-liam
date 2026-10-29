@@ -34,7 +34,11 @@ export default function App() {
       </header>
 
       <main className="app-main">
-        {loading && <p className="app-status">News werden geladen …</p>}
+        {loading && (
+          <p className="app-status" role="status">
+            News werden geladen …
+          </p>
+        )}
         {error && (
           <p className="app-status app-status--error" role="alert">
             {error}

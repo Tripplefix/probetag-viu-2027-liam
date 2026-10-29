@@ -27,7 +27,6 @@
   --radius-l: 12px;
   --shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
   --shadow-hover: 0 8px 24px rgba(16, 24, 40, 0.12);
-  --focus-ring: 0 0 0 3px var(--color-surface), 0 0 0 6px var(--color-primary);
 
   --font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
@@ -44,6 +43,12 @@ body {
   color: var(--color-text);
   background: var(--color-background);
   line-height: 1.5;
+}
+
+/* Fokus als outline statt box-shadow: bleibt auch im Kontrastmodus von Windows sichtbar */
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .visually-hidden {
@@ -167,12 +172,6 @@ body {
   color: var(--color-primary-contrast);
 }
 
-.news-filter__search input:focus-visible,
-.news-filter__chip:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
 .news-count {
   margin: 0 0 var(--space-m);
   font-size: 0.875rem;
@@ -233,8 +232,10 @@ body {
   transform: translateY(-2px);
 }
 
+/* Fokus des Buttons wird an der ganzen Card angezeigt, da die Card klickbar ist */
 .news-card:has(.news-card__more:focus-visible) {
-  box-shadow: var(--focus-ring);
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .news-card--important {
@@ -418,11 +419,6 @@ body {
 
 .news-dialog__close:hover {
   background: var(--color-background);
-}
-
-.news-dialog__close:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .news-dialog__image {
