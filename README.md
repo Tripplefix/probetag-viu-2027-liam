@@ -26,6 +26,12 @@ Ohne weitere Konfiguration liest das Backend die Testdaten aus `server/data/news
 
 Die Anbindung an SharePoint ist Teil der Aufgabe, siehe [BRIEFING.md](BRIEFING.md). Kopiere `server/.env.example` nach `server/.env` und setze `DATA_SOURCE=sharepoint`, sobald deine Anbindung in `server/src/sources/sharepoint.js` steht.
 
+1. In `server/.env` setzen: `DATA_SOURCE=sharepoint`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID` (von der Betreuung).
+2. `npm run dev` starten und die App öffnen. Beim ersten Aufruf von `/api/news` öffnet sich der Browser für die Anmeldung mit dem Probetag-Account (MSAL, Public Client, Loopback auf `http://localhost`). Falls kein Browser aufgeht, steht der Link in der Server-Konsole.
+3. Der Token-Cache liegt in `server/.msal-cache.json` (gitignored). Danach ist keine erneute Anmeldung nötig, auch nicht nach einem Neustart. Bei Problemen die Datei löschen und neu anmelden.
+
+Die App liest die Liste «News» der Site `SHAREPOINT_SITE_URL`.
+
 ## Scripts
 
 | Script | Was es tut |
@@ -37,4 +43,70 @@ Die Anbindung an SharePoint ist Teil der Aufgabe, siehe [BRIEFING.md](BRIEFING.m
 
 ## Entscheide und Annahmen
 
-_Hier dokumentierst du deine wichtigsten Entscheide, Annahmen und offenen Punkte._
+### SharePoint-Liste
+
+- Liste «News» per CSV-Import aus `server/data/news.json` erstellt. Die Daten wurden **1:1 übernommen, ohne Bereinigung**: Die App muss mit unsauberen Daten umgehen können, eine stille Korrektur beim Import hätte das Problem nur verdeckt.
+- Spalten: `Title`, `Inhalt` (Rich Text, damit Redaktorinnen und Redaktoren einen Editor haben), `Kategorie` und `Prioritaet` (Auswahl), `BildUrl` und `BildAlt` (Text, weil der Typ Hyperlink keine relativen Pfade wie `/images/fondue.svg` akzeptiert), `Publikationsdatum` (Datum, weil «Erstellt» das Importdatum wäre) und `AltId` (ID aus dem alten Tool, zur Nachverfolgung).
+- Der CSV-Import hat die internen Spaltennamen als `field_1` … `field_7` angelegt. Die Zuordnung steht in `COLUMNS` in `sharepoint.js`. Die Spalten neu anzulegen hätte mehr Zeit gekostet.
+- `Kategorie` und `Prioritaet` sind als Mehrfachauswahl angelegt, Graph liefert deshalb ein Array. Das Backend nimmt den ersten Wert. Empfehlung: in SharePoint auf Einfachauswahl umstellen.
+
+### Backend
+
+- `id` in der API ist die **SharePoint-Item-ID**, weil sie garantiert eindeutig ist. Die alte ID bleibt in `AltId`.
+- Das Backend übersetzt nur die Spalten ins API-Format und bereinigt nichts. Die Bereinigung passiert an **einer** Stelle im Frontend (`normalizeNews`) und gilt so für Testdaten und SharePoint gleich.
+- Anmeldung nur dann erneut im Browser, wenn MSAL es verlangt (`InteractionRequiredAuthError`). Netzwerkfehler führen nicht zu einer neuen Anmeldung.
+
+### Unsaubere Daten (Annahmen, da der Kunde keine Vorgaben gemacht hat)
+
+| Problem | Umgang |
+| --- | --- |
+| Doppelte News (ID 102) | Duplikat entfernen, der erste Eintrag zählt. Erkannt an gleicher ID **oder** gleichem Titel mit gleichem Datum (in SharePoint haben Duplikate verschiedene IDs). |
+| Kategorie «info» | wird zu «Info» |
+| Kategorie «Personal» bzw. unbekannt | wird zu «Info». Laut Kunde gibt es nur Event, Projekt und Info. |
+| Priorität fehlt | gilt als «Normal» |
+| HTML mit `<script>`, `onerror`, Word-Formatierung | Teaser als reiner Text, voller Inhalt mit DOMPurify bereinigt (siehe Sicherheit) |
+| Datum fehlt | «Ohne Datum», am Ende der Liste |
+| Bild fehlt oder lädt nicht | Platzhalter in der Kategoriefarbe |
+| Alt-Text fehlt | Bild gilt als dekorativ (`alt=""`) |
+| Inhalt leer | nur Titel, im Dialog ein Hinweis |
+| Sehr lange Wörter | automatische Silbentrennung und Umbruch |
+
+### Sicherheit
+
+- Der Teaser wird mit `DOMParser` in reinen Text umgewandelt. Das so erzeugte Dokument ist inert: Skripte laufen nicht, Bilder werden nicht geladen.
+- Der vollständige Inhalt im Dialog wird mit **DOMPurify** bereinigt: keine Skripte und Event-Handler, keine Bilder, keine `style`- und `class`-Attribute. Für Sicherheitscode habe ich bewusst eine bewährte Bibliothek genommen statt einer eigenen Lösung.
+- SharePoint hat beim Import `<script>` bereits entfernt. Darauf verlässt sich die App aber nicht, die Testdaten enthalten es weiterhin.
+
+### Darstellung
+
+- Cards im responsiven Raster: so viele Spalten, wie mit mindestens 300px Platz haben, auf Mobile eine.
+- Der Teaser ist auf 3 Zeilen gekürzt. Den vollständigen Text zeigt ein Dialog (natives `<dialog>`).
+- **Wichtige News** (Priorität «Hoch»): Badge «Wichtig» und farbiger Rahmen, also Farbe **und** Text.
+- Sortierung: neueste zuerst.
+- Datum in Schweizer Zeit (`Europe/Zurich`), z. B. wird `2026-09-30T22:30Z` zum 1. Oktober.
+
+### Filter und Suche
+
+- Filter nach Kategorie über Buttons mit `aria-pressed`, Suche in Titel und Inhalt (reiner Text, nicht in HTML-Tags).
+- Gross- und Kleinschreibung spielt keine Rolle. Bei mehreren Wörtern müssen alle vorkommen.
+- Die Logik ist eine reine Funktion (`filterNews` in `client/src/utils/news.ts`) und deshalb einfach testbar.
+
+### Barrierefreiheit
+
+- Semantische Struktur (`header`, `main`, h1 und h2, Liste der Cards, `article`), Buttons mit eindeutigem Namen («Weiterlesen: [Titel]»).
+- Trefferanzahl und Ladezustand mit `role="status"`, damit der Screenreader sie ansagt. Fehler mit `role="alert"`.
+- Dialog: Fokus bleibt im Dialog, Esc schliesst, danach springt der Fokus zurück zur Card.
+- Fokus-Rahmen als `outline`, damit er auch im Kontrastmodus von Windows sichtbar bleibt. Kontraste mindestens 4.5:1, Animationen aus bei `prefers-reduced-motion`.
+- Geprüft mit axe-core (WCAG 2.2 AA: 0 Verstösse) und von Hand mit der Tastatur.
+
+### Tests
+
+- 7 Tests in `client/src/utils/news.test.ts`: Kategorie, Suche in Titel und Inhalt, mehrere Wörter, Kombination von Kategorie und Suche sowie die Datenbereinigung.
+
+### Offene Punkte
+
+- Sollen alte «Hoch»-News (z. B. Budget von 2025) weiterhin hervorgehoben werden? Ein Ablaufdatum für die Priorität wäre denkbar.
+- Ist «Personal» als vierte Kategorie gewünscht?
+- Für die Ticketsystem-News (102) fehlt der Alt-Text, beim Sommerfest (107) die Bilddatei.
+- Nicht mit einem echten Screenreader (z. B. NVDA) getestet.
+- `npm audit` meldet im Server eine Schwachstelle in `body-parser` (über Express), für den lokalen Betrieb unkritisch.
