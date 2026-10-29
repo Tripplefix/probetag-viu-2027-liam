@@ -2,17 +2,20 @@ import { useId, useState } from 'react';
 import type { NewsItem } from '../types/news';
 import { categoryKey, excerpt, formatDate, htmlToText } from '../utils/format';
 import CategoryIcon from './CategoryIcon';
+import HeartButton from './HeartButton';
 import Highlight from './Highlight';
 
 interface NewsCardProps {
   news: NewsItem;
   read: boolean;
+  liked: boolean;
+  onToggleLike: () => void;
   /** Suchwörter, die im Titel und Teaser markiert werden. */
   words: string[];
   onOpen: (news: NewsItem) => void;
 }
 
-export default function NewsCard({ news, read, words, onOpen }: NewsCardProps) {
+export default function NewsCard({ news, read, liked, words, onOpen, onToggleLike }: NewsCardProps) {
   const titleId = useId();
   const [imageFailed, setImageFailed] = useState(false);
 
@@ -28,6 +31,7 @@ export default function NewsCard({ news, read, words, onOpen }: NewsCardProps) {
       aria-labelledby={titleId}
     >
       <div className="news-card__media">
+        <HeartButton liked={liked} title={news.title} onToggle={onToggleLike} />
         {showImage ? (
           <img
             src={news.imageUrl!}

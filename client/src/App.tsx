@@ -3,7 +3,7 @@ import { fetchNews } from './api/newsApi';
 import NewsCard from './components/NewsCard';
 import NewsDialog from './components/NewsDialog';
 import NewsFilter from './components/NewsFilter';
-import { useReadNews } from './hooks/useReadNews';
+import { useStoredIds } from './hooks/useStoredIds';
 import type { NewsCategory, NewsItem } from './types/news';
 import { sortNewestFirst } from './utils/format';
 import { filterNews, normalizeNews, searchWords } from './utils/news';
@@ -15,7 +15,8 @@ export default function App() {
   const [selected, setSelected] = useState<NewsItem | null>(null);
   const [category, setCategory] = useState<NewsCategory | null>(null);
   const [query, setQuery] = useState('');
-  const { isRead, setRead } = useReadNews();
+  const read = useStoredIds('musterwil-news-gelesen');
+  const liked = useStoredIds('musterwil-news-likes');
 
   const visible = filterNews(news, category, query);
   const words = searchWords(query);
@@ -36,7 +37,11 @@ export default function App() {
 
   function openNews(item: NewsItem) {
     setSelected(item);
-    setRead(item.id, true);
+    read.set(item.id, true);
+  }
+
+  function toggleLike(id: number) {
+    liked.set(id, !liked.has(id));
   }
 
   return (
@@ -101,7 +106,14 @@ export default function App() {
               <ul className="news-grid">
                 {visible.map((item) => (
                   <li key={item.id}>
-                    <NewsCard news={item} read={isRead(item.id)} words={words} onOpen={openNews} />
+                    <NewsCard
+                      news={item}
+                      read={read.has(item.id)}
+                      liked={liked.has(item.id)}
+                      words={words}
+                      onOpen={openNews}
+                      onToggleLike={() => toggleLike(item.id)}
+                    />
                   </li>
                 ))}
               </ul>
@@ -112,9 +124,11 @@ export default function App() {
 
       <NewsDialog
         news={selected}
-        read={selected ? isRead(selected.id) : false}
+        read={selected ? read.has(selected.id) : false}
+        liked={selected ? liked.has(selected.id) : false}
         words={words}
-        onToggleRead={() => selected && setRead(selected.id, !isRead(selected.id))}
+        onToggleRead={() => selected && read.set(selected.id, !read.has(selected.id))}
+        onToggleLike={() => selected && toggleLike(selected.id)}
         onClose={() => setSelected(null)}
       />
     </div>

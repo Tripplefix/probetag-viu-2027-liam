@@ -7,6 +7,7 @@ Kurz und ehrlich, Stichworte reichen. Es gibt keine falschen Antworten.
 - Ausschliesslich mit Claude Code (Desktop-App). Claude hatte Zugriff auf das Repo, das Terminal und einen Browser, konnte also selbst Server starten, Tests ausführen und die App prüfen.
 - Zu Beginn habe ich Claude den Ordner und das Briefing analysieren lassen und daraus einen Tagesplan mit Uhrzeiten erstellt. Nach diesem Plan haben wir Block für Block gearbeitet.
 - Ablauf pro Block: Claude setzt um, ich prüfe das Resultat (Code, live im Browser oder in SharePoint) und gebe Feedback. Committet und gepusht wurde erst nach meiner Freigabe.
+- Nach den Muss-Anforderungen habe ich eigene Ideen vorgegeben (Suchtreffer markieren, Aktualisieren-Button, Like-Funktion, fixe Aktionsleiste im Dialog) und jeweils live reviewt, bevor committet wurde.
 
 ## Wo hat dir Claude am meisten geholfen?
 
@@ -21,6 +22,7 @@ Kurz und ehrlich, Stichworte reichen. Es gibt keine falschen Antworten.
 - **Platzhalter `{error}` im `errorTemplate` von MSAL:** Claude hat ihn verwendet, aber MSAL ersetzt ihn nicht, die Fehlerseite hätte wörtlich `{error}` angezeigt. Gemerkt habe ich es beim Durchgehen und Überarbeiten von `sharepoint.js`. Claude hat es danach im MSAL-Quellcode bestätigt.
 - **Spaltennamen in SharePoint:** Claude hat angenommen, dass die Namen aus der CSV auch die internen Namen sind. Gemerkt haben wir es beim ersten echten Aufruf: Bis auf den Titel waren alle Felder leer. Claude hat die echten Namen über Graph ausgelesen und das Mapping korrigiert.
 - **Erstes Design:** Das Resultat funktionierte, wirkte aber unprofessionell. Die Texte waren abgeschnitten, und die Priorität hatte Claude bewusst auf später verschoben. Gemerkt habe ich es beim Live-Review im Browser. Mit einem konkreten Prompt (drei Punkte, Bezug zum Briefing) habe ich es korrigieren lassen.
+- **Like pro Account (Claude hat widersprochen):** Ich wollte, dass jeder Account nur einmal liken kann. Claude hat darauf hingewiesen, dass das in dieser Architektur nicht echt geht: Im Frontend meldet sich niemand an, und das Backend nutzt einen einzigen Account. Umgesetzt ist ein Like pro Browser. Die Einschränkung und den nächsten Schritt (Anmeldung im Frontend, SharePoint-Liste «Likes») habe ich bewusst akzeptiert und in der README dokumentiert.
 
 ## Was hast du bewusst selbst gemacht oder geprüft?
 
@@ -29,6 +31,7 @@ Kurz und ehrlich, Stichworte reichen. Es gibt keine falschen Antworten.
 - Live-Review des Designs und Feedback dazu
 - Gegenprobe der Tests: `.toLowerCase()` in `filterNews` gelöscht, der Test wurde rot, Änderung zurückgesetzt
 - Filter, Suche und Tastaturbedienung im Browser ausprobiert
+- Zusatzfunktionen (gelesen, Markierung der Suchtreffer, Aktualisieren, Like) live getestet und Darstellung nachbessern lassen
 - Commits und Push jeweils erst nach meiner Freigabe
 - Spielregel eingehalten: Claude hat nur Daten aus dem Repo bekommen, keine persönlichen Daten (Teams-Chat und Mails des Probetag-Accounts hat Claude bewusst nicht gelesen)
 

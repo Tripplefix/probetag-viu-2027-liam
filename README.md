@@ -81,6 +81,7 @@ Die App liest die Liste «News» der Site `SHAREPOINT_SITE_URL`.
 
 - Cards im responsiven Raster: so viele Spalten, wie mit mindestens 300px Platz haben, auf Mobile eine.
 - Der Teaser ist auf 3 Zeilen gekürzt. Den vollständigen Text zeigt ein Dialog (natives `<dialog>`).
+- Der Dialog ist fest am Bildschirm, nicht an der Card. Oben steht eine Aktionsleiste («Gefällt mir», «Gelesen», Schliessen), die beim Scrollen im Dialog stehen bleibt. Die Seite dahinter scrollt nicht mit, solange der Dialog offen ist.
 - **Wichtige News** (Priorität «Hoch»): Badge «Wichtig» und farbiger Rahmen, also Farbe **und** Text.
 - Sortierung: neueste zuerst.
 - Datum in Schweizer Zeit (`Europe/Zurich`), z. B. wird `2026-09-30T22:30Z` zum 1. Oktober.
@@ -95,15 +96,23 @@ Die App liest die Liste «News» der Site `SHAREPOINT_SITE_URL`.
 
 ### «Gelesen» markieren (Kann-Anforderung)
 
-- Wer eine News öffnet, hat sie damit gelesen. Im Dialog lässt sich das mit «Als ungelesen markieren» rückgängig machen. Gelesene Cards zeigen ein Badge «Gelesen» und treten etwas zurück.
+- Wer eine News öffnet, hat sie damit gelesen. Im Dialog lässt sich das über den Umschalter «Gelesen» in der Aktionsleiste rückgängig machen. Gelesene Cards zeigen ein Badge «Gelesen» und treten etwas zurück.
 - **Speicherort: `localStorage` im Browser.** Begründung: Die App-Registrierung hat nur delegierte Rechte mit Sites.Selected und keine eigene Datenbank. Ein Status pro Person in SharePoint bräuchte Schreibrechte und eine zusätzliche Liste. `localStorage` braucht kein Backend und speichert keine Personendaten auf dem Server.
 - Nachteil: Der Status gilt nur pro Gerät und Browser, er wandert nicht mit der Person. Wenn das gewünscht ist, wäre eine SharePoint-Liste «Gelesen» (Person, News-ID) der nächste Schritt. Ist der Speicher blockiert (z. B. im privaten Fenster), läuft die App ohne Gelesen-Status weiter.
+
+### Like («Gefällt mir»)
+
+- Herz-Button oben links auf jeder Card und «Gefällt mir» in der Aktionsleiste des Dialogs. Nicht gelikt: grau und halbtransparent; gelikt: pink und deckend. Für Screenreader `aria-pressed` und der Name «Gefällt mir: [Titel]».
+- Ein Like pro News lässt sich nur ein- und ausschalten, doppelt liken geht nicht. Gespeichert wie «gelesen» im `localStorage` (gemeinsamer Hook `useStoredIds`).
+- **Einschränkung:** Gewünscht war «ein Like pro Account». Das ist in dieser Architektur nicht echt umsetzbar: Im Frontend meldet sich niemand an, und das Backend greift mit einem einzigen Account auf SharePoint zu. Die App kennt die Person also nicht. Umgesetzt ist deshalb ein Like pro Browser, ohne Gesamtzahl (eine Zahl wäre ohne zentrale Speicherung irreführend).
+- Nächster Schritt für echte Likes pro Account: Anmeldung im Frontend (z. B. MSAL im Browser oder Einbettung als SharePoint-Webpart, das die Person kennt) und eine SharePoint-Liste «Likes» mit Person und News-ID, die doppelte Einträge verhindert.
 
 ### Barrierefreiheit
 
 - Semantische Struktur (`header`, `main`, h1 und h2, Liste der Cards, `article`), Buttons mit eindeutigem Namen («Weiterlesen: [Titel]»).
 - Trefferanzahl und Ladezustand mit `role="status"`, damit der Screenreader sie ansagt. Fehler mit `role="alert"`.
 - Dialog: Fokus bleibt im Dialog, Esc schliesst, danach springt der Fokus zurück zur Card.
+- Umschalter («Gefällt mir», «Gelesen», Kategorien) mit `aria-pressed`, damit der Screenreader den Zustand ansagt.
 - Fokus-Rahmen als `outline`, damit er auch im Kontrastmodus von Windows sichtbar bleibt. Kontraste mindestens 4.5:1, Animationen aus bei `prefers-reduced-motion`.
 - Geprüft mit axe-core (WCAG 2.2 AA: 0 Verstösse) und von Hand mit der Tastatur.
 
