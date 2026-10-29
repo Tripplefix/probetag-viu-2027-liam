@@ -2,15 +2,20 @@ import { useEffect, useState } from 'react';
 import { fetchNews } from './api/newsApi';
 import NewsCard from './components/NewsCard';
 import NewsDialog from './components/NewsDialog';
-import type { NewsItem } from './types/news';
+import NewsFilter from './components/NewsFilter';
+import type { NewsCategory, NewsItem } from './types/news';
 import { sortNewestFirst } from './utils/format';
-import { normalizeNews } from './utils/news';
+import { filterNews, normalizeNews } from './utils/news';
 
 export default function App() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<NewsItem | null>(null);
+  const [category, setCategory] = useState<NewsCategory | null>(null);
+  const [query, setQuery] = useState('');
+
+  const visible = filterNews(news, category, query);
 
   useEffect(() => {
     fetchNews()
@@ -38,13 +43,30 @@ export default function App() {
 
         {!loading && !error && news.length === 0 && <p className="app-status">Zurzeit gibt es keine News.</p>}
         {!loading && !error && news.length > 0 && (
-          <ul className="news-grid">
-            {news.map((item) => (
-              <li key={item.id}>
-                <NewsCard news={item} onOpen={setSelected} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <NewsFilter
+              category={category}
+              query={query}
+              onCategoryChange={setCategory}
+              onQueryChange={setQuery}
+            />
+            <p className="news-count" role="status">
+              {visible.length === news.length
+                ? `${news.length} News`
+                : `${visible.length} von ${news.length} News`}
+            </p>
+            {visible.length === 0 ? (
+              <p className="app-status">Keine News gefunden. Passe die Suche oder die Kategorie an.</p>
+            ) : (
+              <ul className="news-grid">
+                {visible.map((item) => (
+                  <li key={item.id}>
+                    <NewsCard news={item} onOpen={setSelected} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </main>
 

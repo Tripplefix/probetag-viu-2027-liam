@@ -1,6 +1,7 @@
 import type { NewsCategory, NewsItem } from '../types/news';
+import { htmlToText } from './format';
 
-const CATEGORIES: NewsCategory[] = ['Event', 'Projekt', 'Info'];
+export const CATEGORIES: NewsCategory[] = ['Event', 'Projekt', 'Info'];
 
 /** «info» → «Info»; unbekannte oder leere Kategorien (z. B. «Personal») gelten als «Info». */
 function normalizeCategory(category: string | null | undefined): NewsCategory {
@@ -28,4 +29,17 @@ export function normalizeNews(items: NewsItem[]): NewsItem[] {
       category: normalizeCategory(item.category),
       priority: item.priority?.toLowerCase() === 'hoch' ? 'Hoch' : 'Normal',
     }));
+}
+
+/**
+ * Filtert nach Kategorie (null = alle) und sucht in Titel und Inhalt.
+ * Gross-/Kleinschreibung egal; bei mehreren Wörtern müssen alle vorkommen.
+ */
+export function filterNews(news: NewsItem[], category: NewsCategory | null, query: string): NewsItem[] {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return news.filter((item) => {
+    if (category && item.category !== category) return false;
+    const text = `${item.title} ${htmlToText(item.content)}`.toLowerCase();
+    return words.every((word) => text.includes(word));
+  });
 }

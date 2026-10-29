@@ -106,6 +106,79 @@ body {
   color: #8e1c1c;
 }
 
+/* Filter und Suche */
+
+.news-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.news-filter__search {
+  display: flex;
+  flex: 1 1 280px;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-width: 420px;
+}
+
+.news-filter__search label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.news-filter__search input {
+  padding: 10px var(--space-m);
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font: inherit;
+  color: var(--color-text);
+}
+
+.news-filter__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+.news-filter__chip {
+  padding: 8px var(--space-m);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.news-filter__chip:hover {
+  border-color: var(--color-primary);
+}
+
+.news-filter__chip[aria-pressed='true'] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+
+.news-filter__search input:focus-visible,
+.news-filter__chip:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.news-count {
+  margin: 0 0 var(--space-m);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
 /* News-Wall: so viele Spalten, wie mit mind. 300px Platz haben, auf Mobile eine */
 
 .news-grid {
