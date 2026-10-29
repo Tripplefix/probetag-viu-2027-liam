@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchNews } from './api/newsApi';
 import NewsCard from './components/NewsCard';
 import NewsDialog from './components/NewsDialog';
 import NewsFilter from './components/NewsFilter';
+import { useReadNews } from './hooks/useReadNews';
 import type { NewsCategory, NewsItem } from './types/news';
 import { sortNewestFirst } from './utils/format';
-import { filterNews, normalizeNews } from './utils/news';
+import { filterNews, normalizeNews, searchWords } from './utils/news';
 
 export default function App() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -14,27 +15,62 @@ export default function App() {
   const [selected, setSelected] = useState<NewsItem | null>(null);
   const [category, setCategory] = useState<NewsCategory | null>(null);
   const [query, setQuery] = useState('');
+  const { isRead, setRead } = useReadNews();
 
   const visible = filterNews(news, category, query);
+  const words = searchWords(query);
 
-  useEffect(() => {
+  // Lädt die News neu, ohne Filter und Suche zurückzusetzen.
+  const loadNews = useCallback(() => {
+    setLoading(true);
+    setError(null);
     fetchNews()
       .then((items) => setNews(sortNewestFirst(normalizeNews(items))))
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    loadNews();
+  }, [loadNews]);
+
+  function openNews(item: NewsItem) {
+    setSelected(item);
+    setRead(item.id, true);
+  }
+
   return (
     <div className="app">
       <header className="app-header">
         <div className="app-header__inner">
-          <p className="app-header__eyebrow">Intranet Gemeinde Musterwil</p>
-          <h1>News aus der Verwaltung</h1>
+          <div>
+            <p className="app-header__eyebrow">Intranet Gemeinde Musterwil</p>
+            <h1>News aus der Verwaltung</h1>
+          </div>
+          <button
+            type="button"
+            className="app-header__refresh"
+            // aria-disabled statt disabled, damit der Fokus beim Laden auf dem Button bleibt.
+            aria-disabled={loading}
+            onClick={() => !loading && loadNews()}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {loading ? 'Wird aktualisiert …' : 'Aktualisieren'}
+          </button>
         </div>
       </header>
 
       <main className="app-main">
-        {loading && (
+        {loading && news.length === 0 && (
           <p className="app-status" role="status">
             News werden geladen …
           </p>
@@ -46,7 +82,7 @@ export default function App() {
         )}
 
         {!loading && !error && news.length === 0 && <p className="app-status">Zurzeit gibt es keine News.</p>}
-        {!loading && !error && news.length > 0 && (
+        {news.length > 0 && (
           <>
             <NewsFilter
               category={category}
@@ -65,7 +101,7 @@ export default function App() {
               <ul className="news-grid">
                 {visible.map((item) => (
                   <li key={item.id}>
-                    <NewsCard news={item} onOpen={setSelected} />
+                    <NewsCard news={item} read={isRead(item.id)} words={words} onOpen={openNews} />
                   </li>
                 ))}
               </ul>
@@ -74,7 +110,13 @@ export default function App() {
         )}
       </main>
 
-      <NewsDialog news={selected} onClose={() => setSelected(null)} />
+      <NewsDialog
+        news={selected}
+        read={selected ? isRead(selected.id) : false}
+        words={words}
+        onToggleRead={() => selected && setRead(selected.id, !isRead(selected.id))}
+        onClose={() => setSelected(null)}
+      />
     </div>
   );
 }

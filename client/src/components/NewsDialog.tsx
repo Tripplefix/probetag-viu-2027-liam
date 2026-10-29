@@ -1,9 +1,13 @@
 import { useEffect, useId, useRef } from 'react';
 import type { NewsItem } from '../types/news';
-import { categoryKey, formatDate, sanitizeHtml } from '../utils/format';
+import { categoryKey, formatDate, highlightHtml, sanitizeHtml } from '../utils/format';
+import Highlight from './Highlight';
 
 interface NewsDialogProps {
   news: NewsItem | null;
+  read: boolean;
+  words: string[];
+  onToggleRead: () => void;
   onClose: () => void;
 }
 
@@ -11,7 +15,7 @@ interface NewsDialogProps {
  * Zeigt eine News vollständig an. Natives <dialog> mit showModal():
  * Fokus bleibt im Dialog, Esc schliesst, danach springt der Fokus zurück zum Auslöser.
  */
-export default function NewsDialog({ news, onClose }: NewsDialogProps) {
+export default function NewsDialog({ news, read, words, onToggleRead, onClose }: NewsDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -23,7 +27,8 @@ export default function NewsDialog({ news, onClose }: NewsDialogProps) {
   }, [news]);
 
   const date = news ? formatDate(news.createdAt) : null;
-  const content = news ? sanitizeHtml(news.content) : '';
+  // Erst markieren, dann bereinigen: DOMPurify ist immer der letzte Schritt vor der Anzeige.
+  const content = news ? sanitizeHtml(highlightHtml(news.content, words)) : '';
 
   return (
     <dialog
@@ -63,7 +68,7 @@ export default function NewsDialog({ news, onClose }: NewsDialogProps) {
               {news.priority === 'Hoch' && <span className="badge badge--important">Wichtig</span>}
             </div>
             <h2 id={titleId} className="news-dialog__title">
-              {news.title}
+              <Highlight text={news.title} words={words} />
             </h2>
             {date && (
               <time className="news-card__date" dateTime={news.createdAt}>
@@ -75,6 +80,11 @@ export default function NewsDialog({ news, onClose }: NewsDialogProps) {
             ) : (
               <p className="news-dialog__empty">Zu dieser News gibt es keinen weiteren Text.</p>
             )}
+            <div className="news-dialog__actions">
+              <button type="button" className="button-secondary" onClick={onToggleRead}>
+                {read ? 'Als ungelesen markieren' : 'Als gelesen markieren'}
+              </button>
+            </div>
           </div>
         </article>
       )}

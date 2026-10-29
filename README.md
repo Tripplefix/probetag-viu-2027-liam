@@ -90,6 +90,14 @@ Die App liest die Liste «News» der Site `SHAREPOINT_SITE_URL`.
 - Filter nach Kategorie über Buttons mit `aria-pressed`, Suche in Titel und Inhalt (reiner Text, nicht in HTML-Tags).
 - Gross- und Kleinschreibung spielt keine Rolle. Bei mehreren Wörtern müssen alle vorkommen.
 - Die Logik ist eine reine Funktion (`filterNews` in `client/src/utils/news.ts`) und deshalb einfach testbar.
+- Suchtreffer werden in Titel, Teaser und Dialog mit `<mark>` markiert. Liegt der Treffer im Inhalt weiter hinten, beginnt der Teaser kurz davor, damit er sichtbar ist. Im Dialog wird zuerst markiert und danach mit DOMPurify bereinigt, damit die Bereinigung immer der letzte Schritt ist.
+- Der Button «Aktualisieren» lädt die News neu, ohne die Seite neu zu laden. Filter und Suche bleiben dabei erhalten.
+
+### «Gelesen» markieren (Kann-Anforderung)
+
+- Wer eine News öffnet, hat sie damit gelesen. Im Dialog lässt sich das mit «Als ungelesen markieren» rückgängig machen. Gelesene Cards zeigen ein Badge «Gelesen» und treten etwas zurück.
+- **Speicherort: `localStorage` im Browser.** Begründung: Die App-Registrierung hat nur delegierte Rechte mit Sites.Selected und keine eigene Datenbank. Ein Status pro Person in SharePoint bräuchte Schreibrechte und eine zusätzliche Liste. `localStorage` braucht kein Backend und speichert keine Personendaten auf dem Server.
+- Nachteil: Der Status gilt nur pro Gerät und Browser, er wandert nicht mit der Person. Wenn das gewünscht ist, wäre eine SharePoint-Liste «Gelesen» (Person, News-ID) der nächste Schritt. Ist der Speicher blockiert (z. B. im privaten Fenster), läuft die App ohne Gelesen-Status weiter.
 
 ### Barrierefreiheit
 
@@ -102,6 +110,7 @@ Die App liest die Liste «News» der Site `SHAREPOINT_SITE_URL`.
 ### Tests
 
 - 7 Tests in `client/src/utils/news.test.ts`: Kategorie, Suche in Titel und Inhalt, mehrere Wörter, Kombination von Kategorie und Suche sowie die Datenbereinigung.
+- 3 Tests in `client/src/utils/format.test.ts`: Markierung nur im Text (nicht in Tags oder Attributen), Sonderzeichen in der Suche, Teaser rund um einen Treffer.
 
 ### Offene Punkte
 

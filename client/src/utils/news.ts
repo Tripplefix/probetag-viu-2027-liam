@@ -31,12 +31,17 @@ export function normalizeNews(items: NewsItem[]): NewsItem[] {
     }));
 }
 
+/** Zerlegt die Suche in einzelne Wörter (klein geschrieben). */
+export function searchWords(query: string): string[] {
+  return query.toLowerCase().split(/\s+/).filter(Boolean);
+}
+
 /**
  * Filtert nach Kategorie (null = alle) und sucht in Titel und Inhalt.
  * Gross-/Kleinschreibung egal; bei mehreren Wörtern müssen alle vorkommen.
  */
 export function filterNews(news: NewsItem[], category: NewsCategory | null, query: string): NewsItem[] {
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const words = searchWords(query);
   return news.filter((item) => {
     if (category && item.category !== category) return false;
     const text = `${item.title} ${htmlToText(item.content)}`.toLowerCase();

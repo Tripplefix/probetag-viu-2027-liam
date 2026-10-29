@@ -1,18 +1,22 @@
 import { useId, useState } from 'react';
 import type { NewsItem } from '../types/news';
-import { categoryKey, formatDate, htmlToText } from '../utils/format';
+import { categoryKey, excerpt, formatDate, htmlToText } from '../utils/format';
 import CategoryIcon from './CategoryIcon';
+import Highlight from './Highlight';
 
 interface NewsCardProps {
   news: NewsItem;
+  read: boolean;
+  /** Suchwörter, die im Titel und Teaser markiert werden. */
+  words: string[];
   onOpen: (news: NewsItem) => void;
 }
 
-export default function NewsCard({ news, onOpen }: NewsCardProps) {
+export default function NewsCard({ news, read, words, onOpen }: NewsCardProps) {
   const titleId = useId();
   const [imageFailed, setImageFailed] = useState(false);
 
-  const teaser = htmlToText(news.content);
+  const teaser = excerpt(htmlToText(news.content), words);
   const date = formatDate(news.createdAt);
   const category = categoryKey(news.category);
   const important = news.priority === 'Hoch';
@@ -20,7 +24,7 @@ export default function NewsCard({ news, onOpen }: NewsCardProps) {
 
   return (
     <article
-      className={`news-card news-card--${category}${important ? ' news-card--important' : ''}`}
+      className={`news-card news-card--${category}${important ? ' news-card--important' : ''}${read ? ' news-card--read' : ''}`}
       aria-labelledby={titleId}
     >
       <div className="news-card__media">
@@ -43,13 +47,18 @@ export default function NewsCard({ news, onOpen }: NewsCardProps) {
         <div className="news-card__badges">
           {news.category && <span className="badge badge--category">{news.category}</span>}
           {important && <span className="badge badge--important">Wichtig</span>}
+          {read && <span className="badge badge--read">Gelesen</span>}
         </div>
 
         <h2 id={titleId} className="news-card__title">
-          {news.title}
+          <Highlight text={news.title} words={words} />
         </h2>
 
-        {teaser && <p className="news-card__teaser">{teaser}</p>}
+        {teaser && (
+          <p className="news-card__teaser">
+            <Highlight text={teaser} words={words} />
+          </p>
+        )}
 
         <div className="news-card__footer">
           {date ? (
